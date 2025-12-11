@@ -37,15 +37,7 @@
  *     responses:
  *       200:
  *         description: API key rolled over successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 newApiKey:
- *                   type: string
- *                 message:
- *                   type: string
+ *         
  */
 
 /**
