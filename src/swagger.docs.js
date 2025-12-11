@@ -227,5 +227,5 @@
  *                   example: ["read", "deposit"]
  *                 expiry:
  *                   type: string
- *                   example: "1D"
+ *                   example: "1Y"
  */
