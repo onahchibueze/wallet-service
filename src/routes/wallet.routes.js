@@ -32,6 +32,7 @@ router.post(
 // DEPOSIT INIT
 router.post(
   "/deposit",
+  jwtAuth ,
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
