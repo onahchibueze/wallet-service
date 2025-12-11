@@ -26,39 +26,42 @@ router.post("/transfer", apiKeyAuth, requireTransferPermission, transfer);
 //////////////////
 router.post(
   "/deposit",
-apiKeyAuth,
+
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
   },
+   apiKeyAuth,
   initializeDeposit
 );
 router.get(
   "/deposit/:reference/status",
- apiKeyAuth,
+
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
   },
+   apiKeyAuth,
   checkDepositStatus
 );
 router.get(
   "/balance",
-  apiKeyAuth,
-apiKeyAuth,
+
  (req, res, next) => {
     req.requiredPerm = "read";
     next();
   },
+   apiKeyAuth,
   getBalance
 );
 router.get(
   "/transactions",
-apiKeyAuth,
+
  (req, res, next) => {
     req.requiredPerm = "read";
     next();
   },
+  apiKeyAuth,
   getTransaction
 );
 router.post(
