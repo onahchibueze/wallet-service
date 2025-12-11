@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 export const initializeDeposit = async (req, res) => {
   const { amount } = req.body;
-  const userId = req.user.id || req.userId;
+const userId = req.user?.id || req.userId;
   const wallet = await Wallet.findOne({ userId });
   const reference = crypto.randomUUID();
   await Transaction.create({
