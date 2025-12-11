@@ -1,9 +1,12 @@
 export const getExpiryDate = (expiryStr) => {
   if (!expiryStr) return null;
 
+  // Clean input (VERY IMPORTANT)
+  const clean = expiryStr.trim().toUpperCase();
+
   const now = new Date();
 
-  switch (expiryStr.toUpperCase()) {
+  switch (clean) {
     case "1H":
       now.setHours(now.getHours() + 1);
       break;
