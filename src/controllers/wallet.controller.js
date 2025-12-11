@@ -6,6 +6,7 @@ import Wallet from "../models/Wallet.js";
 import mongoose from "mongoose";
 export const transfer = async (req, res) => {
   const { amount, wallet_number } = req.body;
+  const generateRef = () => crypto.randomUUID();
   if (!wallet_number || !amount || amount < 100) {
     return res.status(400).json({
       status: "error",
@@ -58,17 +59,21 @@ export const transfer = async (req, res) => {
           type: "transfer_sent",
           amount: -amount,
           counterparty: receiverWallet._id,
+
           status: "completed",
+          reference: generateRef(),
         },
         {
           walletId: receiverWallet._id,
           type: "transfer_received",
-          amount: amount,
+          amount: +amount,
           counterparty: senderWallet._id,
+
           status: "completed",
+          reference: generateRef(),
         },
       ],
-      { session }
+      { session, ordered: true }
     );
 
     await session.commitTransaction();

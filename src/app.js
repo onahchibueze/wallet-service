@@ -11,7 +11,7 @@ import Wallet from "../src/models/Wallet.js";
 
 // ROUTES
 import authRoutes from "./routes/auth.routes.js";
-import apiKeyRoutes from "./routes/apiKey.route.js";
+import apiKeyRoutes from "./routes/apiKey.routes.js";
 import walletRoutes from "./routes/wallet.routes.js";
 
 dotenv.config();
@@ -35,7 +35,9 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: process.env.BASE_URL || "http://localhost:3000",
+        url:
+          process.env.BASE_URL ||
+          "https://wallet-service-onahchibueze1457-1nsr0fbh.leapcell.dev",
         description: "Default server",
       },
     ],
@@ -54,7 +56,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ["./src/routes/*.js"],
+  apis: ["./src/swagger.docs.js"],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
