@@ -37,40 +37,36 @@ export const initializeDeposit = async (req, res) => {
       reference,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Initialization failed" });
   }
 };
 export const handleWebHook = async (req, res) => {
   try {
-    // Get raw body as string
-    const payload = req.body; // With express.raw(), this is a Buffer
-    const signature = req.headers["x-paystack-signature"];
-
-    // Compute hash using raw payload
+    const payload = JSON.stringify(req.body);
     const hash = crypto
       .createHmac("sha512", process.env.PAYSTACK_SECRET_KEY)
-      .update(payload) // use Buffer directly
+      .update(payload)
       .digest("hex");
 
-    if (hash !== signature) {
+    if (hash !== req.headers["x-paystack-signature"]) {
       console.log("Computed hash:", hash);
-      console.log("Paystack signature:", signature);
+
       return res.status(400).json({ error: "Invalid signature" });
     }
 
-    // Parse JSON after verifying signature
-    const event = JSON.parse(payload.toString());
+    const event = req.body;
 
     if (event.event === "charge.success") {
       const { reference, amount } = event.data;
 
-      // Idempotency check
       const idemp = await Idempotency.findOne({ reference });
       if (idemp && idemp.processed)
         return res.status(200).send("Already processed");
 
       const session = await mongoose.startSession();
       session.startTransaction();
+
       try {
         const tx = await Transaction.findOne({ reference }).session(session);
         if (!tx || tx.status !== "pending")
@@ -105,6 +101,7 @@ export const handleWebHook = async (req, res) => {
     res.status(500).json({ error: "Webhook processing failed" });
   }
 };
+
 export const checkDepositStatus = async (req, res) => {
   const { reference } = req.params;
 

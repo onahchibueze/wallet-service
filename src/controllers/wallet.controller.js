@@ -17,7 +17,6 @@ export const transfer = async (req, res) => {
   session.startTransaction();
 
   try {
-    // Find sender wallet
     const senderWallet = await Wallet.findOne({ userId: senderUserId }).session(
       session
     );
@@ -25,7 +24,6 @@ export const transfer = async (req, res) => {
       throw new Error("Sender wallet not found");
     }
 
-    // Find receiver wallet by wallet_number
     const receiverWallet = await Wallet.findOne({
       walletNumber: wallet_number,
     }).session(session);
@@ -41,7 +39,6 @@ export const transfer = async (req, res) => {
       throw new Error("Insufficient balance");
     }
 
-    // Debit sender, credit receiver
     await Wallet.updateOne(
       { _id: senderWallet._id },
       { $inc: { balance: -amount } },
@@ -54,7 +51,6 @@ export const transfer = async (req, res) => {
       { session }
     );
 
-    // Record two transactions
     await Transaction.create(
       [
         {
@@ -98,7 +94,7 @@ export const transfer = async (req, res) => {
 };
 export const getBalance = async (req, res) => {
   try {
-    const userId = req.user?.id || req.userId; // works for both JWT and API key
+    const userId = req.user?.id || req.userId;
 
     const wallet = await Wallet.findOne({ userId }).select("balance");
 
@@ -109,7 +105,6 @@ export const getBalance = async (req, res) => {
       });
     }
 
-    // Exactly the response format the task expects
     res.json({
       balance: wallet.balance,
     });
@@ -123,7 +118,7 @@ export const getBalance = async (req, res) => {
 };
 export const getTransaction = async (req, res) => {
   try {
-    const userId = req.user?.id || req.userId; // works for JWT and API key
+    const userId = req.user?.id || req.userId;
 
     const wallet = await Wallet.findOne({ userId });
     if (!wallet) {
@@ -133,20 +128,18 @@ export const getTransaction = async (req, res) => {
       });
     }
 
-    // Get all transactions for this wallet
     const transactions = await Transaction.find({ walletId: wallet._id })
-      .sort({ createdAt: -1 }) // newest first
+      .sort({ createdAt: -1 })
       .select("type amount status counterparty createdAt");
 
-    // Format exactly like the task example
     const formatted = transactions.map((tx) => ({
       type:
         tx.type === "transfer_sent"
           ? "transfer"
           : tx.type === "transfer_received"
           ? "transfer"
-          : tx.type, // deposit stays deposit
-      amount: Math.abs(tx.amount), // always positive
+          : tx.type,
+      amount: Math.abs(tx.amount),
       status: tx.status === "completed" ? "success" : tx.status,
     }));
 
