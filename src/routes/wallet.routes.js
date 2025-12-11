@@ -1,5 +1,6 @@
 import express from "express";
 import { jwtAuth } from "../middleware/jwtAuth.js";
+import { apiKeyAuth } from "../middleware/apiKeyAuth.js";
 import {
   transfer,
   getBalance,
@@ -18,14 +19,14 @@ const requireTransferPermission = (req, res, next) => {
   next();
 };
 
-router.post("/transfer", jwtAuth, requireTransferPermission, transfer);
+router.post("/transfer", apiKeyAuth, requireTransferPermission, transfer);
 
 ///////////////////
 
 //////////////////
 router.post(
   "/deposit",
-  jwtAuth,
+apiKeyAuth,
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
@@ -34,7 +35,7 @@ router.post(
 );
 router.get(
   "/deposit/:reference/status",
-  jwtAuth,
+ apiKeyAuth,
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
@@ -43,14 +44,21 @@ router.get(
 );
 router.get(
   "/balance",
-  jwtAuth,
-
+  apiKeyAuth,
+apiKeyAuth,
+ (req, res, next) => {
+    req.requiredPerm = "read";
+    next();
+  },
   getBalance
 );
 router.get(
   "/transactions",
-  jwtAuth,
-
+apiKeyAuth,
+ (req, res, next) => {
+    req.requiredPerm = "read";
+    next();
+  },
   getTransaction
 );
 router.post(
