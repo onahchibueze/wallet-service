@@ -212,20 +212,22 @@
  *     tags: [API Keys]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               permissions:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["read", "deposit"]
+ *               expiry:
+ *                 type: string
+ *                 example: "30d"
  *     responses:
  *       201:
  *         description: API key created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 permissions:
- *                   type: array
- *                   items:
- *                     type: string
- *                   example: ["read", "deposit"]
- *                 expiry:
- *                   type: string
- *                   example: "1Y"
  */
