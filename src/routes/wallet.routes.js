@@ -26,14 +26,14 @@ router.post("/transfer", apiKeyAuth, requireTransferPermission, transfer);
 //////////////////
 router.post(
   "/deposit",
-
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
   },
-  apiKeyAuth
+  apiKeyAuth,
   initializeDeposit
 );
+
 router.get(
   "/deposit/:reference/status",
 
