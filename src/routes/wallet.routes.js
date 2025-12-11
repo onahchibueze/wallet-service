@@ -26,12 +26,12 @@ router.post("/transfer", apiKeyAuth, requireTransferPermission, transfer);
 //////////////////
 router.post(
   "/deposit",
- jwtAuth,
+
   (req, res, next) => {
     req.requiredPerm = "deposit";
     next();
   },
-  
+  apiKeyAuth
   initializeDeposit
 );
 router.get(
