@@ -33,7 +33,7 @@ router.post(
   initializeDeposit
 );
 router.get(
-  "/deposit//:reference/status",
+  "/deposit/:reference/status",
   jwtAuth,
   (req, res, next) => {
     req.requiredPerm = "deposit";
