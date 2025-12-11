@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import ApiKey from "../models/apiKey.js";
+import ApiKey from "../models/ApiKey.js";
 import { getExpiryDate } from "../utils/expiryUtils.js";
 
 export const createApiKey = async (req, res) => {
